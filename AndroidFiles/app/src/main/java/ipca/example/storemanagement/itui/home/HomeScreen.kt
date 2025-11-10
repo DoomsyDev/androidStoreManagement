@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,10 +18,10 @@ import ipca.example.storemanagement.data.Item
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel = viewModel(),
+    onNavigateToProfile: () -> Unit // Recebe a ação de navegação
 ) {
     val items by homeViewModel.items.collectAsState()
-
     var editingItem by remember { mutableStateOf<Item?>(null) }
 
     Scaffold(
@@ -30,7 +31,16 @@ fun HomeScreen(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
+                ),
+                actions = {
+                    // Botão de ícone para aceder ao perfil
+                    IconButton(onClick = onNavigateToProfile) {
+                        Icon(
+                            imageVector = Icons.Filled.AccountCircle,
+                            contentDescription = "Ver Perfil"
+                        )
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -59,6 +69,7 @@ fun HomeScreen(
         }
     }
 
+    // Lógica para mostrar o diálogo de edição
     if (editingItem != null) {
         EditItemDialog(
             item = editingItem!!,

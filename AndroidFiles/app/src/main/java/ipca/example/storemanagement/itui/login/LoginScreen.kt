@@ -1,16 +1,32 @@
 package ipca.example.storemanagement.itui.login
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ipca.example.storemanagement.itui.UserSessionViewModel
 
 @Composable
 fun LoginScreen(
+    userSessionViewModel: UserSessionViewModel,
     onLoginSuccess: () -> Unit,
     onNavigateToRegister: () -> Unit,
     loginViewModel: LoginViewModel = viewModel()
@@ -21,6 +37,7 @@ fun LoginScreen(
 
     LaunchedEffect(loginState) {
         if (loginState is LoginState.Success) {
+            userSessionViewModel.startUserSession(email)
             onLoginSuccess()
         }
     }
@@ -28,29 +45,33 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Login", style = MaterialTheme.typography.headlineLarge)
+        Text(text = "Store Management", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(48.dp))
 
+        // Campo de Email
         OutlinedTextField(
             value = email,
             onValueChange = loginViewModel::onEmailChange,
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            isError = loginState is LoginState.Error
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Campo de Password
         OutlinedTextField(
             value = password,
             onValueChange = loginViewModel::onPasswordChange,
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            isError = loginState is LoginState.Error
         )
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -66,15 +87,18 @@ fun LoginScreen(
             CircularProgressIndicator()
         } else {
             Button(
-                onClick = loginViewModel::login,
+                onClick = { loginViewModel.login() },
                 modifier = Modifier.fillMaxWidth(),
+                enabled = loginState !is LoginState.Loading
             ) {
                 Text("Entrar")
             }
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         TextButton(onClick = onNavigateToRegister) {
-            Text("Não tem conta? Registe-se")
+            Text("Não tem uma conta? Registe-se")
         }
     }
 }
