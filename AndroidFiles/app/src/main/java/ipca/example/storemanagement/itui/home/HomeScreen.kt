@@ -123,7 +123,7 @@ fun EditItemDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+                Text("Canelar")
             }
         }
     )
