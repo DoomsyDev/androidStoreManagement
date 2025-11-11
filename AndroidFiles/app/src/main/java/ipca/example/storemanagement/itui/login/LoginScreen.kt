@@ -37,7 +37,8 @@ fun LoginScreen(
 
     LaunchedEffect(loginState) {
         if (loginState is LoginState.Success) {
-            userSessionViewModel.startUserSession(email)
+            // Correção: a função já não recebe parâmetros
+            userSessionViewModel.startUserSession()
             onLoginSuccess()
         }
     }
