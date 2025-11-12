@@ -15,15 +15,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ipca.example.storemanagement.itui.UserSessionViewModel
+// Importação importante para usar o viewModel()
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    userSessionViewModel: UserSessionViewModel,
+    // 1. Alterar o ViewModel para ProfileViewModel e inicializá-lo
+    profileViewModel: ProfileViewModel = viewModel(),
     onNavigateBack: () -> Unit
 ) {
-    val user by userSessionViewModel.currentUser.collectAsState()
+    // 2. Obter o estado 'user' a partir do ProfileViewModel correto
+    val user by profileViewModel.user.collectAsState()
 
     Scaffold(
         topBar = {
@@ -53,13 +56,17 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // O resto do código já está correto e vai funcionar com a variável 'user'
             user?.let { currentUser ->
                 Text(text = "Nome: ${currentUser.name}", style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Email: ${currentUser.email}", style = MaterialTheme.typography.bodyLarge)
-
             } ?: run {
-                Text(text = "Nenhum utilizador logado.")
+                // Esta mensagem será mostrada se o ViewModel ainda não tiver carregado os dados
+                // ou se não houver um utilizador logado.
+                CircularProgressIndicator() // Mostra um indicador de progresso enquanto carrega
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "A carregar dados do utilizador...")
             }
         }
     }

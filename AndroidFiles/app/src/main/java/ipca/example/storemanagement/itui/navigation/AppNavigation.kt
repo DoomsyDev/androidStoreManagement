@@ -25,6 +25,8 @@ fun AppNavigation(userSessionViewModel: UserSessionViewModel) {
         navController = navController,
         startDestination = AppRoutes.LOGIN_SCREEN
     ) {
+        // ... (as outras rotas 'login', 'register', e 'home' mantêm-se iguais)
+
         composable(AppRoutes.LOGIN_SCREEN) {
             LoginScreen(
                 userSessionViewModel = userSessionViewModel,
@@ -62,8 +64,10 @@ fun AppNavigation(userSessionViewModel: UserSessionViewModel) {
         }
 
         composable(AppRoutes.PROFILE_SCREEN) {
+            // AQUI ESTÁ A CORREÇÃO:
+            // Removemos o parâmetro que estava a causar o erro.
+            // O ProfileScreen agora gere o seu próprio ViewModel internamente.
             ProfileScreen(
-                userSessionViewModel = userSessionViewModel,
                 onNavigateBack = {
                     navController.navigateUp()
                 }
