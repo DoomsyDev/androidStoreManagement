@@ -59,19 +59,16 @@ class RegisterViewModel : ViewModel() {
 
             _registerState.value = RegisterState.Loading
             try {
-                // 1. Criar utilizador no Firebase Authentication
                 val authResult = auth.createUserWithEmailAndPassword(_email.value, _password.value).await()
                 val firebaseUser = authResult.user
 
                 if (firebaseUser != null) {
-                    // 2. Guardar informação do utilizador no Realtime Database
                     val name = _email.value.substringBefore('@').replaceFirstChar { it.titlecase() }
                     val user = User(
                         id = firebaseUser.uid,
                         name = name,
                         email = _email.value
                     )
-                    // Usamos o UID do utilizador como chave no nó "users"
                     database.getReference("users").child(firebaseUser.uid).setValue(user).await()
                     _registerState.value = RegisterState.Success
                 } else {

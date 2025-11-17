@@ -27,7 +27,6 @@ fun RegisterScreen(
 
     LaunchedEffect(registerState) {
         if (registerState is RegisterState.Success) {
-            // Correção: a função já não recebe parâmetros
             userSessionViewModel.startUserSession()
             onRegisterSuccess()
         }

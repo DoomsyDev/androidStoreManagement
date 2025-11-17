@@ -17,7 +17,6 @@ class HomeViewModel : ViewModel() {
     private val _items = MutableStateFlow<List<Item>>(emptyList())
     val items = _items.asStateFlow()
 
-    // Referência para o nó "items" na sua base de dados Firebase
     private val database = FirebaseDatabase.getInstance("https://storemanagementaula-default-rtdb.europe-west1.firebasedatabase.app/").getReference("items")
 
     init {

@@ -20,7 +20,7 @@ class UserSessionViewModel : ViewModel() {
 
     /**
      * Inicia uma nova sessão de utilizador após o login/registo.
-     * Busca os dados do utilizador no Realtime Database.
+     * Vai buscar os dados do utilizador no Realtime Database.
      */
     fun startUserSession() {
         viewModelScope.launch {

@@ -29,7 +29,7 @@ class ProfileViewModel : ViewModel() {
                 val email = firebaseUser.email ?: "Email não encontrado"
                 val name = email.substringBefore('@').replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
-                // Criar o nosso objeto User com os dados do Firebase
+                // Criar o objeto User com os dados do Firebase
                 _user.value = User(
                     id = firebaseUser.uid,
                     name = name,
