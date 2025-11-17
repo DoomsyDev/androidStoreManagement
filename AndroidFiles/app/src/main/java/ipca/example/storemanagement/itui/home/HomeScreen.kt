@@ -45,7 +45,6 @@ fun HomeScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                // TODO: Mostrar um diálogo para o utilizador inserir dados
                 homeViewModel.createItem("Novo Item", "Descrição")
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Adicionar Item")
