@@ -11,9 +11,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 sealed class RegisterState {
-    object Idle : RegisterState()
-    object Loading : RegisterState()
-    object Success : RegisterState()
+    data object Idle : RegisterState()
+    data object Loading : RegisterState()
+    data object Success : RegisterState()
     data class Error(val message: String) : RegisterState()
 }
 
@@ -37,6 +37,10 @@ class RegisterViewModel : ViewModel() {
     fun onEmailChange(newEmail: String) { _email.value = newEmail }
     fun onPasswordChange(newPassword: String) { _password.value = newPassword }
     fun onConfirmPasswordChange(newConfirm: String) { _confirmPassword.value = newConfirm }
+
+    fun onNavigationHandled() {
+        _registerState.value = RegisterState.Idle
+    }
 
     fun register() {
         viewModelScope.launch {

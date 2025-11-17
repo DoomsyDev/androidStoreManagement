@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import ipca.example.storemanagement.data.User
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,11 +20,10 @@ class UserSessionViewModel : ViewModel() {
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
 
     /**
-     * Inicia uma nova sessão de utilizador após o login/registo.
-     * Vai buscar os dados do utilizador no Realtime Database.
+     * Inicia uma nova sessão de utilizador e RETORNA o Job para que se possa esperar por ele.
      */
-    fun startUserSession() {
-        viewModelScope.launch {
+    fun startUserSession(): Job {
+        return viewModelScope.launch {
             val firebaseUser = auth.currentUser
             if (firebaseUser != null) {
                 try {
@@ -31,7 +31,6 @@ class UserSessionViewModel : ViewModel() {
                     val user = dataSnapshot.getValue(User::class.java)
                     _currentUser.value = user
                 } catch (e: Exception) {
-                    // Tratar erro, por exemplo, se o utilizador não estiver na base de dados
                     _currentUser.value = null
                 }
             }

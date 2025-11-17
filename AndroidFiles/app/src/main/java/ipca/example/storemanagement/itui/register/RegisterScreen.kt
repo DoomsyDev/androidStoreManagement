@@ -3,14 +3,17 @@ package ipca.example.storemanagement.itui.register
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ipca.example.storemanagement.itui.UserSessionViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -25,9 +28,11 @@ fun RegisterScreen(
     val confirmPassword by registerViewModel.confirmPassword.collectAsState()
     val registerState by registerViewModel.registerState.collectAsState()
 
-    LaunchedEffect(registerState) {
+    LaunchedEffect(key1 = registerState) {
         if (registerState is RegisterState.Success) {
-            userSessionViewModel.startUserSession()
+            delay(1200)
+            userSessionViewModel.startUserSession().join()
+            registerViewModel.onNavigationHandled()
             onRegisterSuccess()
         }
     }
@@ -85,21 +90,38 @@ fun RegisterScreen(
             )
             Spacer(modifier = Modifier.height(32.dp))
 
-            if (registerState is RegisterState.Error) {
-                Text(
-                    text = (registerState as RegisterState.Error).message,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+            Box(
+                modifier = Modifier.height(48.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                when (registerState) {
+                    is RegisterState.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is RegisterState.Success -> {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = "Sucesso",
+                            tint = Color(0xFF4CAF50),
+                            modifier = Modifier.size(48.dp)
+                        )
+                    }
+                    is RegisterState.Error -> {
+                        Text(
+                            text = (registerState as RegisterState.Error).message,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    else -> {
+                    }
+                }
             }
 
-            if (registerState is RegisterState.Loading) {
-                CircularProgressIndicator()
-            } else {
+            if (registerState !is RegisterState.Loading && registerState !is RegisterState.Success) {
                 Button(
                     onClick = { registerViewModel.register() },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = registerState !is RegisterState.Loading
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("Registar")
                 }

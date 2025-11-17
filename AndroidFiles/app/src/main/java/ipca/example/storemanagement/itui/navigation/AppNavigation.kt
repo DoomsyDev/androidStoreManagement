@@ -44,8 +44,11 @@ fun AppNavigation(userSessionViewModel: UserSessionViewModel) {
                 userSessionViewModel = userSessionViewModel,
                 onRegisterSuccess = {
                     navController.navigate(AppRoutes.HOME_SCREEN) {
-                        popUpTo(AppRoutes.LOGIN_SCREEN) { inclusive = true }
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
                     }
+                    navController.graph.setStartDestination(AppRoutes.HOME_SCREEN)
                 },
                 onNavigateBack = {
                     navController.navigateUp()
