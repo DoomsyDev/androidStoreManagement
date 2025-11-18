@@ -92,7 +92,7 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = loginState !is LoginState.Loading
             ) {
-                Text("Entra")
+                Text("Entrasakdkaksdksd")
             }
         }
 
