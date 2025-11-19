@@ -70,7 +70,7 @@ fun LoginScreen(
             onValueChange = loginViewModel::onPasswordChange,
             label = { Text("Password") },
             visualTransformation = PasswordVisualTransformation(),
-            modifsier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             isError = loginState is LoginState.Error
         )
