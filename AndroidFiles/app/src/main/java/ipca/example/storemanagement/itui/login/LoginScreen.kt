@@ -37,7 +37,6 @@ fun LoginScreen(
 
     LaunchedEffect(loginState) {
         if (loginState is LoginState.Success) {
-            // Correção: a função já não recebe parâmetros
             userSessionViewModel.startUserSession()
             onLoginSuccess()
         }
@@ -53,7 +52,6 @@ fun LoginScreen(
         Text(text = "Store Management", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Campo de Email
         OutlinedTextField(
             value = email,
             onValueChange = loginViewModel::onEmailChange,
@@ -64,7 +62,6 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo de Password
         OutlinedTextField(
             value = password,
             onValueChange = loginViewModel::onPasswordChange,

@@ -35,19 +35,16 @@ class HomeViewModel : ViewModel() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Tratar o erro, por exemplo, com um log
                 Log.e("HomeViewModel", "Erro ao carregar itens: ${error.message}")
             }
         })
     }
 
     fun createItem(name: String, description: String) {
-        // Gera uma chave única para o novo item
         val itemId = database.push().key ?: return
 
         val newItem = Item(id = itemId, name = name, description = description)
 
-        // Guarda o novo item na base de dados usando a chave gerada
         database.child(itemId).setValue(newItem)
             .addOnSuccessListener {
                 Log.d("HomeViewModel", "Item criado com sucesso.")
@@ -58,12 +55,10 @@ class HomeViewModel : ViewModel() {
     }
 
     fun updateItem(itemToUpdate: Item) {
-        // Atualiza o item na base de dados usando o seu ID
         database.child(itemToUpdate.id).setValue(itemToUpdate)
     }
 
     fun deleteItem(itemId: String) {
-        // Remove o item da base de dados usando o seu ID
         database.child(itemId).removeValue()
     }
 }

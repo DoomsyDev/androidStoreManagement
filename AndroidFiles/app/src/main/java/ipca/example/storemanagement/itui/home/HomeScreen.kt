@@ -19,7 +19,7 @@ import ipca.example.storemanagement.data.Item
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel(),
-    onNavigateToProfile: () -> Unit // Recebe a ação de navegação
+    onNavigateToProfile: () -> Unit
 ) {
     val items by homeViewModel.items.collectAsState()
     var editingItem by remember { mutableStateOf<Item?>(null) }
@@ -33,7 +33,6 @@ fun HomeScreen(
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ),
                 actions = {
-                    // Botão de ícone para aceder ao perfil
                     IconButton(onClick = onNavigateToProfile) {
                         Icon(
                             imageVector = Icons.Filled.AccountCircle,
@@ -68,7 +67,6 @@ fun HomeScreen(
         }
     }
 
-    // Lógica para mostrar o diálogo de edição
     if (editingItem != null) {
         EditItemDialog(
             item = editingItem!!,

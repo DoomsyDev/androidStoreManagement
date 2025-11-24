@@ -12,7 +12,6 @@ class ProfileViewModel : ViewModel() {
     private val _user = MutableStateFlow<User?>(null)
     val user = _user.asStateFlow()
 
-    // Instância do Firebase Auth
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     init {
@@ -21,11 +20,9 @@ class ProfileViewModel : ViewModel() {
 
     private fun loadUserProfile() {
         viewModelScope.launch {
-            // Ir buscar o utilizador atualmente logado no Firebase
             val firebaseUser = auth.currentUser
 
             if (firebaseUser != null) {
-                // Extrair o nome do e-mail (tudo antes do '@')
                 val email = firebaseUser.email ?: "Email não encontrado"
                 val name = email.substringBefore('@').replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
