@@ -36,7 +36,7 @@ fun HomeScreen(
                     IconButton(onClick = onNavigateToProfile) {
                         Icon(
                             imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = "Ver Perfil"
+                            contentDescription = "Ver Perfi"
                         )
                     }
                 }
