@@ -1,22 +1,29 @@
-//package ipca.example.storemanagement.domain.usecase
-//
-//import android.util.Patterns
-//import ipca.example.storemanagement.domain.repository.AuthRepository
-//import javax.inject.Inject
-//
-//class RegisterUseCase @Inject constructor(private val authRepository: AuthRepository) {    suspend operator fun invoke(name: String, email: String, password: String, confirmPassword: String): Result<Unit> {
-//    if (name.isBlank()) {
-//        return Result.failure(IllegalArgumentException("O nome não pode estar vazio."))
-//    }
-//    if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-//        return Result.failure(IllegalArgumentException("O formato do email é inválido."))
-//    }
-//    if (password.length < 6) {
-//        return Result.failure(IllegalArgumentException("A password deve ter pelo menos 6 caracteres."))
-//    }
-//    if (password != confirmPassword) {
-//        return Result.failure(IllegalArgumentException("As passwords não coincidem."))
-//    }
-//    return authRepository.register(name, email, password)
-//}
-//}
+package ipca.example.storemanagement.domain.usecase
+
+import ipca.example.storemanagement.domain.model.UserModel
+import ipca.example.storemanagement.domain.repository.UserRepository
+import java.util.UUID
+
+class RegisterUseCase(
+    private val repository: UserRepository
+) {
+    suspend operator fun invoke(name: String, email: String, password: String): Result<UserModel> {
+        return try {
+            val existingUser = repository.getUserByEmail(email)
+            if (existingUser != null) {
+                return Result.failure(Exception("Email já está em uso"))
+            }
+
+            val newUser = UserModel(
+                id = UUID.randomUUID().toString(),
+                name = name,
+                email = email
+            )
+
+            repository.createUser(newUser)
+            Result.success(newUser)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+}

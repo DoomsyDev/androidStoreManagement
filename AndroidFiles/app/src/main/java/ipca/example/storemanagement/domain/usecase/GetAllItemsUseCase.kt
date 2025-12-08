@@ -2,11 +2,12 @@ package ipca.example.storemanagement.domain.usecase
 
 import ipca.example.storemanagement.domain.model.ItemModel
 import ipca.example.storemanagement.domain.repository.ItemRepository
+import kotlinx.coroutines.flow.Flow
 
-class UpdateItemUseCase(
+class GetAllItemsUseCase(
     private val repository: ItemRepository
 ) {
-    suspend operator fun invoke(item: ItemModel) {
-        repository.updateItem(item)
+    operator fun invoke(): Flow<List<ItemModel>> {
+        return repository.getAllItems()
     }
 }
