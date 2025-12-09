@@ -55,7 +55,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = loginViewModel::onEmailChange,
-            label = { Text("Email") },
+            label = { Text("Emai") },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             isError = loginState is LoginState.Error
