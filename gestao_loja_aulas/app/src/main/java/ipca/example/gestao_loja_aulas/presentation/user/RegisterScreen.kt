@@ -5,6 +5,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,30 +22,58 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(16.dp)) {
-        TextField(value = name, onValueChange = { name = it }, label = { Text("Nome") })
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Nome") },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(value = password, onValueChange = { password = it }, label = { Text("Password") })
+
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(onClick = {
-            viewModel.register(email, password, name) {
-                navController.navigate(Routes.PRODUCTS) {
-                    popUpTo(Routes.LOGIN) { inclusive = true }
+        Button(
+            onClick = {
+                viewModel.register(email, password, name) {
+                    navController.navigate(Routes.PRODUCTS) {
+                        popUpTo(Routes.LOGIN) { inclusive = true }
+                    }
                 }
-            }
-        }) {
+            },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        ) {
             Text("Registar")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { navController.navigate(Routes.LOGIN) }) {
-            Text("Voltar para Login")
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Button(onClick = { navController.popBackStack() }) {
+            Text("Voltar ao Login")
         }
 
-        if (!message.isNullOrEmpty()) {
+        if (message.isNotEmpty()) {
+            Spacer(modifier = Modifier.height(12.dp))
             Text(message)
         }
     }

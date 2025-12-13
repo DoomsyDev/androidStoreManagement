@@ -1,10 +1,11 @@
 package ipca.example.gestao_loja_aulas.presentation.product
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -24,36 +25,96 @@ fun ProductDetailScreen(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        val p = productState
+    val p = productState
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
         if (p == null) {
             Text("A carregar...")
-        } else {
-            Text(text = p.name ?: "Sem nome")
+            return@Column
+        }
 
-            Spacer(modifier = Modifier.height(8.dp))
+        // TITLE
+        Text(
+            text = p.name ?: "Produto sem nome",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
 
-            Text(text = p.description ?: "")
+        Spacer(modifier = Modifier.height(12.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+        // PRICE & QUANTITY
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(20.dp)
+        ) {
+            Text(
+                "Preço: ${p.price?.let { "%.2f €".format(it) } ?: "N/A"}",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium
+            )
 
-            Row {
-                Button(onClick = {
+            Text(
+                "Stock: ${p.quantity ?: 0}",
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // DESCRIPTION CARD
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+
+                Text(
+                    text = "Descrição",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = p.description ?: "Sem descrição",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
+
+        // BUTTONS ROW
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Button(
+                onClick = {
                     navController.navigate("addEditProduct?productId=${p.id}")
-                }) {
-                    Text("Editar")
-                }
+                },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Editar")
+            }
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Button(onClick = {
+            Button(
+                onClick = {
                     viewModel.deleteProduct(p.id ?: "") {
                         navController.popBackStack()
                     }
-                }) {
-                    Text("Eliminar")
-                }
+                },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text("Eliminar")
             }
         }
     }

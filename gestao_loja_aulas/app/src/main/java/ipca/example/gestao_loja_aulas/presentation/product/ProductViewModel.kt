@@ -68,7 +68,6 @@ class ProductViewModel @Inject constructor(
     }
 
     fun getProductByIdOnce(id: String, onResult: (Product?) -> Unit) {
-        // The repository exposes a Flow for single product — collect first value
         viewModelScope.launch {
             useCases.getProductById(id).collectLatest { p ->
                 onResult(p)

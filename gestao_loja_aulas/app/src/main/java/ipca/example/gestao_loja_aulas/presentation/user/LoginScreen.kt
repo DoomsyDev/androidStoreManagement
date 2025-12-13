@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,21 +22,24 @@ fun LoginScreen(
 
     Column(
         modifier = Modifier
-            .padding(20.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(0.9f)
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            modifier = Modifier.fillMaxWidth(0.9f)
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -47,7 +51,7 @@ fun LoginScreen(
                     onError = { error = it }
                 )
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(0.9f)
         ) {
             Text("Login")
         }
@@ -60,6 +64,7 @@ fun LoginScreen(
                 .clickable {
                     navController.navigate(Routes.REGISTER)
                 }
+                .padding(8.dp)
         )
 
         if (error.isNotEmpty()) {

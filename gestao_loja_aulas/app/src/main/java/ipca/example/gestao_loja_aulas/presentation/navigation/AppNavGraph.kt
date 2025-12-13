@@ -40,7 +40,7 @@ fun AppNavGraph() {
             ProductListScreen(navController)
         }
 
-        // Product detail expects an argument productId
+        //Product detail expects an argument productId
         composable(
             route = "${Routes.PRODUCT_DETAIL}/{productId}",
             arguments = listOf(navArgument("productId") { type = NavType.StringType })
@@ -49,7 +49,7 @@ fun AppNavGraph() {
             ProductDetailScreen(navController, productId)
         }
 
-        // Add/Edit product: optional productId query param
+        //Add/Edit product: optional productId query param
         composable(
             route = "${Routes.ADD_EDIT_PRODUCT}?productId={productId}",
             arguments = listOf(
