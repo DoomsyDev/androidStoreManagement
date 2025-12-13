@@ -1,6 +1,8 @@
 package ipca.example.storemanagement.itui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,10 +22,18 @@ object AppRoutes {
 @Composable
 fun AppNavigation(userSessionViewModel: UserSessionViewModel) {
     val navController = rememberNavController()
+    val currentUser by userSessionViewModel.currentUser.collectAsState()
+
+    //define o ecra inicial baseado se há ulilizador logado
+    val startDestination = if (currentUser != null) {
+        AppRoutes.HOME_SCREEN
+    } else {
+        AppRoutes.LOGIN_SCREEN
+    }
 
     NavHost(
         navController = navController,
-        startDestination = AppRoutes.LOGIN_SCREEN
+        startDestination = startDestination
     ) {
         composable(AppRoutes.LOGIN_SCREEN) {
             LoginScreen(
@@ -66,8 +76,14 @@ fun AppNavigation(userSessionViewModel: UserSessionViewModel) {
 
         composable(AppRoutes.PROFILE_SCREEN) {
             ProfileScreen(
+                userSessionViewModel = userSessionViewModel,
                 onNavigateBack = {
                     navController.navigateUp()
+                },
+                onLogout = {
+                    navController.navigate(AppRoutes.LOGIN_SCREEN) {
+                        popUpTo(0) { inclusive = true }
+                    }
                 }
             )
         }

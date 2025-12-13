@@ -20,9 +20,9 @@ import kotlinx.coroutines.delay
 fun RegisterScreen(
     userSessionViewModel: UserSessionViewModel,
     onRegisterSuccess: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    registerViewModel: RegisterViewModel = viewModel()
 ) {
-    val registerViewModel: RegisterViewModel = viewModel()
     val email by registerViewModel.email.collectAsState()
     val password by registerViewModel.password.collectAsState()
     val confirmPassword by registerViewModel.confirmPassword.collectAsState()
@@ -30,8 +30,9 @@ fun RegisterScreen(
 
     LaunchedEffect(key1 = registerState) {
         if (registerState is RegisterState.Success) {
+            val userId = (registerState as RegisterState.Success).userId
             delay(1200)
-            userSessionViewModel.startUserSession().join()
+            userSessionViewModel.startUserSession(userId).join()
             registerViewModel.onNavigationHandled()
             onRegisterSuccess()
         }

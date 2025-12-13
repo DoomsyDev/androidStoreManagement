@@ -30,7 +30,7 @@ class UserRepositoryImpl(
         user?.let { userDao.deleteUser(it) }
     }
 
-    // Mapper extensions
+    //mapper extensions
     private fun User.toModel() = UserModel(
         id = id,
         name = name,

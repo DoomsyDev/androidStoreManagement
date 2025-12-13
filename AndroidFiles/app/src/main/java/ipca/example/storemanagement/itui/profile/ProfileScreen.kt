@@ -1,35 +1,28 @@
 package ipca.example.storemanagement.itui.profile
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-// Importação importante para usar o viewModel()
-import androidx.lifecycle.viewmodel.compose.viewModel
+import ipca.example.storemanagement.itui.UserSessionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    profileViewModel: ProfileViewModel = viewModel(),
-    onNavigateBack: () -> Unit
+    userSessionViewModel: UserSessionViewModel,
+    onNavigateBack: () -> Unit,
+    onLogout: () -> Unit
 ) {
-    val user by profileViewModel.user.collectAsState()
+    val currentUser by userSessionViewModel.currentUser.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Perfil do Utilizador") },
+                title = { Text("Perfil") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -41,7 +34,6 @@ fun ProfileScreen(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
         }
@@ -50,19 +42,70 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            user?.let { currentUser ->
-                Text(text = "Nome: ${currentUser.name}", style = MaterialTheme.typography.bodyLarge)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Email: ${currentUser.email}", style = MaterialTheme.typography.bodyLarge)
-            } ?: run {
+            Spacer(modifier = Modifier.height(32.dp))
+
+            if (currentUser != null) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Informações do Utilizador",
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        HorizontalDivider()
+
+                        ProfileInfoRow(label = "Nome:", value = currentUser!!.name)
+                        ProfileInfoRow(label = "Email:", value = currentUser!!.email)
+                        ProfileInfoRow(label = "ID:", value = currentUser!!.id)
+                    }
+                }
+            } else {
                 CircularProgressIndicator()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "A carregar dados do utilizador...")
+                Text("A carregar perfil...")
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    userSessionViewModel.endUserSession()
+                    onLogout()
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text("Terminar Sessão")
             }
         }
+    }
+}
+
+@Composable
+private fun ProfileInfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

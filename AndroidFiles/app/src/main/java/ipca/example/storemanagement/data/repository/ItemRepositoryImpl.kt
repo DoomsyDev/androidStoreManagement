@@ -33,7 +33,7 @@ class ItemRepositoryImpl(
         itemDao.deleteItemById(id)
     }
 
-    // Mapper extensions
+    //mapper extensions
     private fun Item.toModel() = ItemModel(
         id = id,
         name = name,

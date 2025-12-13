@@ -1,23 +1,27 @@
 package ipca.example.storemanagement.itui.login
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
+import ipca.example.storemanagement.data.repository.UserRepositoryImpl
+import ipca.example.storemanagement.data.source.local.AppDatabase
+import ipca.example.storemanagement.domain.usecase.LoginUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 sealed class LoginState {
     object Idle : LoginState()
     object Loading : LoginState()
-    object Success : LoginState()
+    data class Success(val userId: String) : LoginState()
     data class Error(val message: String) : LoginState()
 }
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val database = AppDatabase.getDatabase(application)
+    private val repository = UserRepositoryImpl(database.userDao())
+    private val loginUseCase = LoginUseCase(repository)
 
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
@@ -50,11 +54,15 @@ class LoginViewModel : ViewModel() {
             }
 
             _loginState.value = LoginState.Loading
-            try {
-                auth.signInWithEmailAndPassword(_email.value, _password.value).await()
-                _loginState.value = LoginState.Success
-            } catch (e: Exception) {
-                _loginState.value = LoginState.Error(e.message ?: "Credenciais inválidas.")
+
+            val result = loginUseCase(_email.value, _password.value)
+
+            result.onSuccess { user ->
+                _loginState.value = LoginState.Success(user.id)
+            }.onFailure { exception ->
+                _loginState.value = LoginState.Error(
+                    exception.message ?: "Credenciais inválidas."
+                )
             }
         }
     }

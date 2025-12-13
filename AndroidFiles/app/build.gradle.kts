@@ -1,8 +1,8 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)  // ← ADICIONAR ESTA LINHA!
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -52,13 +52,20 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    // Adicione esta linha para resolver a referência ao viewModel()
+    // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
-    implementation(libs.androidx.room.common.jvm)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)  // ← ADICIONAR ESTA LINHA!
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

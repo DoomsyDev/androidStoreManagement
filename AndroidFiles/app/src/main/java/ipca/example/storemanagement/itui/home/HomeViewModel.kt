@@ -1,64 +1,79 @@
 package ipca.example.storemanagement.itui.home
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import ipca.example.storemanagement.data.Item
+import ipca.example.storemanagement.data.repository.ItemRepositoryImpl
+import ipca.example.storemanagement.data.source.local.AppDatabase
+import ipca.example.storemanagement.domain.model.ItemModel
+import ipca.example.storemanagement.domain.usecase.CreateItemUseCase
+import ipca.example.storemanagement.domain.usecase.DeleteItemUseCase
+import ipca.example.storemanagement.domain.usecase.GetAllItemsUseCase
+import ipca.example.storemanagement.domain.usecase.UpdateItemUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _items = MutableStateFlow<List<Item>>(emptyList())
+    //inicializa tudo aqui mesmo
+    private val database = AppDatabase.getDatabase(application)
+    private val repository = ItemRepositoryImpl(database.itemDao())
+    private val getAllItemsUseCase = GetAllItemsUseCase(repository)
+    private val createItemUseCase = CreateItemUseCase(repository)
+    private val updateItemUseCase = UpdateItemUseCase(repository)
+    private val deleteItemUseCase = DeleteItemUseCase(repository)
+
+    private val _items = MutableStateFlow<List<ItemModel>>(emptyList())
     val items = _items.asStateFlow()
-
-    private val database = FirebaseDatabase.getInstance("https://storemanagementaula-default-rtdb.europe-west1.firebasedatabase.app/").getReference("items")
 
     init {
         loadItems()
     }
 
     private fun loadItems() {
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val itemList = mutableListOf<Item>()
-                for (itemSnapshot in snapshot.children) {
-                    val item = itemSnapshot.getValue(Item::class.java)
-                    item?.let { itemList.add(it) }
+        viewModelScope.launch {
+            try {
+                getAllItemsUseCase().collect { itemList ->
+                    _items.value = itemList
                 }
-                _items.value = itemList
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Erro ao carregar itens: ${e.message}")
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.e("HomeViewModel", "Erro ao carregar itens: ${error.message}")
-            }
-        })
+        }
     }
 
     fun createItem(name: String, description: String) {
-        val itemId = database.push().key ?: return
-
-        val newItem = Item(id = itemId, name = name, description = description)
-
-        database.child(itemId).setValue(newItem)
-            .addOnSuccessListener {
+        viewModelScope.launch {
+            try {
+                createItemUseCase(name, description)
                 Log.d("HomeViewModel", "Item criado com sucesso.")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Falha ao criar item.", e)
             }
-            .addOnFailureListener {
-                Log.e("HomeViewModel", "Falha ao criar item.", it)
-            }
+        }
     }
 
-    fun updateItem(itemToUpdate: Item) {
-        database.child(itemToUpdate.id).setValue(itemToUpdate)
+    fun updateItem(item: ItemModel) {
+        viewModelScope.launch {
+            try {
+                updateItemUseCase(item)
+                Log.d("HomeViewModel", "Item atualizado com sucesso.")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Falha ao atualizar item.", e)
+            }
+        }
     }
 
     fun deleteItem(itemId: String) {
-        database.child(itemId).removeValue()
+        viewModelScope.launch {
+            try {
+                deleteItemUseCase(itemId)
+                Log.d("HomeViewModel", "Item deletado com sucesso.")
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Falha ao deletar item.", e)
+            }
+        }
     }
 }

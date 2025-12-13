@@ -8,12 +8,10 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ipca.example.storemanagement.data.Item
+import ipca.example.storemanagement.domain.model.ItemModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,7 +20,7 @@ fun HomeScreen(
     onNavigateToProfile: () -> Unit
 ) {
     val items by homeViewModel.items.collectAsState()
-    var editingItem by remember { mutableStateOf<Item?>(null) }
+    var editingItem by remember { mutableStateOf<ItemModel?>(null) }
 
     Scaffold(
         topBar = {
@@ -81,9 +79,9 @@ fun HomeScreen(
 
 @Composable
 fun EditItemDialog(
-    item: Item,
+    item: ItemModel,
     onDismiss: () -> Unit,
-    onConfirm: (Item) -> Unit
+    onConfirm: (ItemModel) -> Unit
 ) {
     var name by remember { mutableStateOf(item.name) }
     var description by remember { mutableStateOf(item.description) }
@@ -126,9 +124,8 @@ fun EditItemDialog(
     )
 }
 
-
 @Composable
-fun ItemCard(item: Item, onUpdate: () -> Unit, onDelete: () -> Unit) {
+fun ItemCard(item: ItemModel, onUpdate: () -> Unit, onDelete: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)

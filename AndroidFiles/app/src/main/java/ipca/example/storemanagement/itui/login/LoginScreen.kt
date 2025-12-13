@@ -37,7 +37,8 @@ fun LoginScreen(
 
     LaunchedEffect(loginState) {
         if (loginState is LoginState.Success) {
-            userSessionViewModel.startUserSession()
+            val userId = (loginState as LoginState.Success).userId
+            userSessionViewModel.startUserSession(userId)
             onLoginSuccess()
         }
     }
