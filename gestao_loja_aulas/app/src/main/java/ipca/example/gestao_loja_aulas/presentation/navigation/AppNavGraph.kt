@@ -11,6 +11,7 @@ import ipca.example.gestao_loja_aulas.presentation.product.ProductDetailScreen
 import ipca.example.gestao_loja_aulas.presentation.product.ProductListScreen
 import ipca.example.gestao_loja_aulas.presentation.user.LoginScreen
 import ipca.example.gestao_loja_aulas.presentation.user.RegisterScreen
+import ipca.example.gestao_loja_aulas.presentation.user.UserProfileScreen
 
 object Routes {
     const val LOGIN = "login"
@@ -18,6 +19,7 @@ object Routes {
     const val PRODUCTS = "products"
     const val PRODUCT_DETAIL = "product"
     const val ADD_EDIT_PRODUCT = "addEditProduct"
+    const val USER_PROFILE = "userProfile"
 }
 
 @Composable
@@ -38,6 +40,9 @@ fun AppNavGraph() {
 
         composable(Routes.PRODUCTS) {
             ProductListScreen(navController)
+        }
+        composable(Routes.USER_PROFILE) {
+            UserProfileScreen(navController)
         }
 
         //Product detail expects an argument productId

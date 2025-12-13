@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,28 +28,52 @@ fun ProductListScreen(
 ) {
     val products by viewModel.products.collectAsState()
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
 
-        // Header
+        // ---------- HEADER ----------
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Text(
                 "Produtos",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
 
-            Button(onClick = { navController.navigate(Routes.ADD_EDIT_PRODUCT) }) {
-                Text("Adicionar")
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                // --- USER ICON ---
+                IconButton(
+                    onClick = { navController.navigate(Routes.USER_PROFILE) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "Perfil",
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+
+                // --- ADD PRODUCT BUTTON ---
+                Button(onClick = { navController.navigate(Routes.ADD_EDIT_PRODUCT) }) {
+                    Text("Adicionar")
+                }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Product List
+        // ---------- PRODUCT LIST ----------
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -82,7 +108,7 @@ fun ProductCard(
             )
             Spacer(modifier = Modifier.height(6.dp))
 
-            // PRICE + QUANTITY ROW
+            // PRICE + QUANTITY
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,

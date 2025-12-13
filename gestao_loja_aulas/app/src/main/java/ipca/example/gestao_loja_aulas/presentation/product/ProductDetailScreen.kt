@@ -31,11 +31,16 @@ fun ProductDetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         if (p == null) {
-            Text("A carregar...")
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("A carregar...")
+            }
             return@Column
         }
 
@@ -49,15 +54,12 @@ fun ProductDetailScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         // PRICE & QUANTITY
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
             Text(
                 "Preço: ${p.price?.let { "%.2f €".format(it) } ?: "N/A"}",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium
             )
-
             Text(
                 "Stock: ${p.quantity ?: 0}",
                 style = MaterialTheme.typography.bodyLarge
@@ -72,15 +74,12 @@ fun ProductDetailScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
-
                 Text(
                     text = "Descrição",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Text(
                     text = p.description ?: "Sem descrição",
                     style = MaterialTheme.typography.bodyMedium
@@ -91,9 +90,7 @@ fun ProductDetailScreen(
         Spacer(modifier = Modifier.height(30.dp))
 
         // BUTTONS ROW
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
                 onClick = {
                     navController.navigate("addEditProduct?productId=${p.id}")
