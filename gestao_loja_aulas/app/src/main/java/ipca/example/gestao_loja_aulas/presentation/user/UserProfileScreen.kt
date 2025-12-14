@@ -18,6 +18,10 @@ fun UserProfileScreen(
 ) {
     val user by viewModel.currentUser.collectAsState()
 
+    val displayName = user?.name
+        ?: user?.email?.substringBefore("@")
+        ?: "N/A"
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,8 +38,17 @@ fun UserProfileScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Text("Nome: ${user?.name ?: "N/A"}")
-        Text("Email: ${user?.email ?: "N/A"}")
+        Text(
+            text = "Nome: $displayName",
+            style = MaterialTheme.typography.bodyLarge
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Email: ${user?.email ?: "N/A"}",
+            style = MaterialTheme.typography.bodyMedium
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
