@@ -100,7 +100,7 @@ fun ProductCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            // NAME
+            //NAME
             Text(
                 text = product.name ?: "Sem nome",
                 style = MaterialTheme.typography.titleMedium,
@@ -108,7 +108,7 @@ fun ProductCard(
             )
             Spacer(modifier = Modifier.height(6.dp))
 
-            // PRICE + QUANTITY
+            //PRICE + QUANTITY
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -120,7 +120,7 @@ fun ProductCard(
                     color = MaterialTheme.colorScheme.primary
                 )
 
-                // QUANTITY BADGE
+                //QUANTITY BADGE
                 Box(
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.small)
@@ -137,7 +137,7 @@ fun ProductCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // DESCRIPTION PREVIEW
+            //DESCRIPTION PREVIEW
             if (!product.description.isNullOrBlank()) {
                 Text(
                     text = product.description ?: "",

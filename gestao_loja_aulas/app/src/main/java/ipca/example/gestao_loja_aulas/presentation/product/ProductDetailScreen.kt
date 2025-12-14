@@ -44,7 +44,7 @@ fun ProductDetailScreen(
             return@Column
         }
 
-        // TITLE
+        //TITLE
         Text(
             text = p.name ?: "Produto sem nome",
             style = MaterialTheme.typography.headlineSmall,
@@ -53,7 +53,7 @@ fun ProductDetailScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // PRICE & QUANTITY
+        //PRICE & QUANTITY
         Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
             Text(
                 "Preço: ${p.price?.let { "%.2f €".format(it) } ?: "N/A"}",
@@ -68,7 +68,7 @@ fun ProductDetailScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // DESCRIPTION CARD
+        //DESCRIPTION CARD
         Card(
             modifier = Modifier.fillMaxWidth(),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -89,7 +89,7 @@ fun ProductDetailScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        // BUTTONS ROW
+        //BUTTONS ROW
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
                 onClick = {

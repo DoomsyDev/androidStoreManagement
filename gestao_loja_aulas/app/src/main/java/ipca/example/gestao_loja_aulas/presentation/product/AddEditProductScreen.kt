@@ -36,7 +36,7 @@ fun AddEditProductScreen(
         }
     }
 
-    // SCREEN LAYOUT
+    //SCREEN LAYOUT
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,7 +45,7 @@ fun AddEditProductScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // TITLE
+        //TITLE
         Text(
             text = if (isEditing) "Editar Produto" else "Adicionar Produto",
             style = MaterialTheme.typography.headlineSmall
@@ -53,7 +53,7 @@ fun AddEditProductScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // FORM CARD
+        //FORM CARD
         Card(
             modifier = Modifier.fillMaxWidth(0.9f),
             elevation = CardDefaults.cardElevation(4.dp)
@@ -95,7 +95,7 @@ fun AddEditProductScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // ACTION BUTTON
+        //ACTION BUTTON
         Button(
             onClick = {
                 val product = Product(
